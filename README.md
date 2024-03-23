@@ -2,13 +2,15 @@
 
 Stay informed about temperature variations, precipitation chances, wind conditions, and more, all at your fingertips for any location you desire, whether it's your current position or a destination on your radar along with a comprehensive 5-day forecast.
 
+
 # Install
 
 This project uses [node](https://nodejs.org/en) and [npm](https://www.npmjs.com/). Go check them out if you don't have them locally installed.
 
+
 # Getting Started
 
-1. Clone the repository:
+1. Clone the repository using below command or download the zip folder:
 ```bash
 git clone git@github.com:Sarthak014/weather-forecast.git
 ```
@@ -23,7 +25,7 @@ cd weather-forecast
 npm install
 ```
 
-4. After successful installing, Run the application using below command:
+4. After successfully installation, Run the application using the below command:
 ```bash
 npm run dev
 ```
