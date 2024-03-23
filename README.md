@@ -2,6 +2,7 @@
 
 Stay informed about temperature variations, precipitation chances, wind conditions, and more, all at your fingertips for any location you desire, whether it's your current position or a destination on your radar along with a comprehensive 5-day forecast.
 
+URL: [Weather Forecast](https://clever-lokum-e1d7a4.netlify.app/)
 
 # Install
 
