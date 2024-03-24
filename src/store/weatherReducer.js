@@ -15,8 +15,10 @@ export const weatherSlice = createSlice({
             state.weather = action.payload;
         },
         setError: (state, action) => {
-            console.log(action);
             state.error = action.payload;
+        },
+        setLoading: (state, action) => {
+            state.loading = action.payload;
         }
     }
 });
@@ -25,7 +27,8 @@ export const {
     setQuery,
     setUnits,
     setWeather,
-    setError
+    setError,
+    setLoading
   } = weatherSlice.actions;
   
   export default weatherSlice.reducer;
