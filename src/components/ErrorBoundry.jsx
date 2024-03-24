@@ -1,38 +1,27 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setError } from "../store/weatherReducer";
+import { Component } from 'react'
 
-const ErrorBoundry = ({ children }) => {
-  const dispatch = useDispatch();
-  const error = useSelector((state) => state.error);
+class ErrorBoundry extends Component {
+  state = { hasError: false };
 
-  
-  useEffect(() => {
-    const handleError = (event) => {
-      if (!error) {
-        dispatch(setError(event.error || new Error("Something went wrong! PLease try after sometime.")))
-      }
-    };
-
-    window.addEventListener("error", handleError);
-
-    return () => {
-      window.removeEventListener("error", handleError);
-    };
-  }, []);
-
-  if (error) {
-    // You can log the error or display a custom error UI
-    console.error(error);
-    return (
-      <div className="box-border h-dvh bg-slate-700 flex flex-col justify-center items-center">
-        <h2>Something went wrong</h2>
-        <p>{error.message}</p>
-      </div>
-    );
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
   }
 
-  return children;
-};
+  componentDidCatch(error, info) {
+    console.log(error, info);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <div className="box-border h-dvh flex flex-col justify-center items-center">
+        <h1 className='md:text-lg lg:text-xl text-base font-medium'>404</h1>
+        <h2 className='sm:text-base lg:text-lg text-xs font-medium'>Something went wrong! PLease try after sometime.</h2>
+      </div>
+    }
+
+    return this.props.children;
+  }
+}
+
 
 export default ErrorBoundry;
