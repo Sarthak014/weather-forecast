@@ -7,14 +7,14 @@ function TimeAndLocation() {
 
   return (
     <>
-      <div className="flex items-center justify-center my-6">
-        <p className="text-white text-xl font-extralight">
+      <div className="flex items-center justify-center sm:my-3 md:my-5 my-2">
+        <p className="text-white sm:text-sm md:text-base lg:text-xl text-xs font-extralight">
           {localTime}
         </p>
       </div>
 
-      <div className="flex items-center justify-center my-3">
-        <p className="text-white text-3xl font-medium">
+      <div className="flex items-center justify-center md:my-3 my-2">
+        <p className="text-white sm:text-sm md:text-base lg:text-xl xl:text-3xl text-xs font-medium">
           {`${name}, ${country}`}
         </p>
       </div>

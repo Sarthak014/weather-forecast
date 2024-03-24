@@ -3,71 +3,108 @@ import ButtonGroup from "../ButtonGroup";
 import { tempBtnSchema } from "../../constants/buttons.const";
 import { useState } from "react";
 import { useDeferredValue } from "react";
-import { useDispatch, useSelector } from 'react-redux';
-import { setQuery, setUnits } from "../../store/weatherReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { setQuery, setUnits, setWeather } from "../../store/weatherReducer";
+import getFormattedWeatherData from "../../services/weatherService";
 
 function HeaderItems() {
   const dispatch = useDispatch();
   const [search, setSearch] = useState("");
   const searchDefVal = useDeferredValue(search);
-  const units = useSelector((state) => state.units);
+  const { query, units } = useSelector((state) => state);
 
   function handleInputChange(event) {
     setSearch(event.currentTarget.value);
   }
 
-  function handleSearchClick() {
-    if (searchDefVal !== '') {
-      dispatch(setQuery({q: searchDefVal}));
+  async function handleSearchClick() {
+    try {
+      if (searchDefVal !== "") {
+        const queryObj = { q: searchDefVal };
+        const weatherResponse = await getFormattedWeatherData({
+          ...queryObj,
+          units,
+        });
+
+        if (weatherResponse) {
+          dispatch(setQuery(queryObj));
+          dispatch(setWeather(weatherResponse));
+        }
+      }
+    } catch (error) {
+      console.error(error);
     }
   }
 
-  function handleLocationClick() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        let lat = position.coords.latitude;
-        let lon = position.coords.longitude;
+  async function handleLocationClick() {
+    try {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          let lat = position.coords.latitude;
+          let lon = position.coords.longitude;
 
-        dispatch(setQuery({lat, lon}));
+          dispatch(setQuery({ lat, lon }));
+        });
+      }
+      const weatherResponse = await getFormattedWeatherData({
+        ...query,
+        units,
       });
+
+      if (weatherResponse) {
+        dispatch(setWeather(weatherResponse));
+      }
+    } catch (error) {
+      console.error(error);
     }
   }
 
-  function handleClick(event) {
-    const buttonName = event.currentTarget.name;
-    console.log("buttonName: ", buttonName);
+  async function handleClick(event) {
+    try {
+      const buttonName = event.currentTarget.name;
 
-    if (buttonName !== units) {
-      dispatch(setUnits(buttonName));
+      if (buttonName !== units) {
+        dispatch(setUnits(buttonName));
+        const weatherResponse = await getFormattedWeatherData({
+          ...query,
+          units,
+        });
+
+        if (weatherResponse) {
+          dispatch(setWeather(weatherResponse));
+        }
+      }
+    } catch (error) {
+      console.error(error);
     }
   }
 
   return (
-    <div className="flex flex-row justify-center space-x-4">
-      <div className="flex flex-row items-center justify-center space-x-3">
+    <div className="flex flex-row md:justify-center justify-between md:space-x-4 space-x-1">
+      <div className="flex flex-row items-center md:justify-center justify-between md:space-x-3 md:w-auto w-3/4">
         <input
           value={searchDefVal}
           type="text"
           placeholder="search your city..."
           id="search-city-header"
           name="search"
-          className="text-sm font-light p-2 w-full shadow-sm focus:outline-none capitalize placeholder:lowercase"
+          className="text-sm font-light md:p-2 p-1 shadow-sm focus:outline-none capitalize placeholder:lowercase md:w-auto w-3/4"
           onChange={handleInputChange}
         />
         <UilSearch
           size={25}
-          className="text-white cursor-pointer transition ease-out hover:scale-110"
+          className="text-white cursor-pointer transition ease-out hover:scale-110 md:w-6 w-4"
           onClick={handleSearchClick}
         />
         <UilMapMarker
           size={25}
-          className="text-white cursor-pointer transition ease-out hover:scale-110"
+          className="text-white cursor-pointer transition ease-out hover:scale-110 md:w-6 w-4"
           onClick={handleLocationClick}
         />
       </div>
 
       <ButtonGroup
-        classes={`text-xl text-white font-light transition ease-out hover:scale-110`}
+        classes={`md:text-xl text-sm text-white font-light transition ease-out hover:scale-110`}
         data={tempBtnSchema}
         isDivider={true}
         handleClick={handleClick}

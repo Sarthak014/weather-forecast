@@ -8,7 +8,7 @@ function FutureForecast({title}) {
   return (
     <div className="mt-14">
       <div className="flex items-center justify-start">
-        <p className="text-white font-medium uppercase">
+        <p className="text-white font-medium uppercase sm:text-sm md:text-base text-sm">
           {title}
         </p>
       </div>
@@ -19,16 +19,16 @@ function FutureForecast({title}) {
         {forecastWeatherDetails.map(({detail, icon, max, min, title}, index) => {
           return (
             <div key={index} className="flex flex-col items-center justify-center">
-              <p className="font-light text-sm">{title}</p>
+              <p className="font-light md:text-sm text-xs">{title}</p>
               <figure className="my-2">
                 <img
                   src={getWeatherIcon(icon)}
-                  className="w-12"
+                  className="sm:w-9 md:w-12 w-7"
                   alt="weather-icon"
                 />
-                <figcaption>{detail}</figcaption>
+                <figcaption className="sm:text-sm md:text-base text-xs">{detail}</figcaption>
               </figure>
-              <p className="font-medium mt-4">{`${min.toFixed()}° / ${max.toFixed()}°`}</p>
+              <p className="md:font-medium font-normal mt-4 sm:text-sm md:text-base text-xs">{`${min.toFixed()}° / ${max.toFixed()}°`}</p>
             </div>
           );
         })}
