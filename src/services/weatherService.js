@@ -1,17 +1,21 @@
 import { API_KEY, BASE_URL } from "../constants/env.const";
 import { getFotmattedLocalTime } from "../utilities/localDataAndTimeFormat";
+import { toast } from "react-toastify";
 
 export const getWeatherData = (ver, infoType, searchParams) => {
-  console.log('getWeatherData');
-  console.log('Search params: ', searchParams);
-  const url = new URL(`${BASE_URL}/${ver}/${infoType}`);
-  url.search = new URLSearchParams({ ...searchParams, appid: API_KEY });
+    const url = new URL(`${BASE_URL}/${ver}/${infoType}`);
+    url.search = new URLSearchParams({ ...searchParams, appid: API_KEY });
 
-  console.log('URL IS: ', url);
-  console.log('---- End -----');
-  return fetch(url)
-    .then((res) => res.json())
-    .then((data) => data);
+    return fetch(url)
+      .then((resp) => {
+        if (resp.ok) {
+          return resp.json();
+        } else {
+          // If the response status is not within 200-299, throw an error
+          toast.error(`${resp.status} - ${resp.statusText}`);
+          throw new Error(`${resp.status} - ${resp.statusText}`);
+        }
+      });
 };
 
 export const formatCurrentWeather = (data) => {
@@ -66,24 +70,34 @@ const formatForecastWeather = (data) => {
 };
 
 export const getFormattedWeatherData = async (searchParams) => {
-  const currentWeatherResp = await getWeatherData("2.5", "weather", searchParams);
-  const formattedCurrentWeatherData = formatCurrentWeather(currentWeatherResp);
+    let formattedCurrentWeatherData = {};
+    let formattedForecastWeatherData = {};
+    const currentWeatherResp = await getWeatherData(
+      "2.5",
+      "weather",
+      searchParams
+    );
 
-  const { lat, lon } = formattedCurrentWeatherData;
+    if (currentWeatherResp) {
+      formattedCurrentWeatherData = formatCurrentWeather(currentWeatherResp);
+      const { lat, lon } = formattedCurrentWeatherData;
+    
+      const forecastWeatherResp = await getWeatherData("3.0", "onecall", {
+        lat,
+        lon,
+        exclude: "current,minutely,alerts",
+        units: searchParams.units,
+      });
 
-  const forecastWeatherResp = await getWeatherData("3.0", "onecall", {
-    lat,
-    lon,
-    exclude: "current,minutely,alerts",
-    units: searchParams.units,
-  });
-  const formattedForecastWeatherData =
-    formatForecastWeather(forecastWeatherResp);
+      if (forecastWeatherResp) {
+        formattedForecastWeatherData = formatForecastWeather(forecastWeatherResp);
+      }
 
-  return {
-    ...formattedCurrentWeatherData,
-    ...formattedForecastWeatherData,
-  };
+      return {
+        ...formattedCurrentWeatherData,
+        ...formattedForecastWeatherData,
+      };
+    }
 };
 
 export default getFormattedWeatherData;
