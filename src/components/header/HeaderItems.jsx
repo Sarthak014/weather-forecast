@@ -4,7 +4,7 @@ import { tempBtnSchema } from "../../constants/buttons.const";
 import { useState } from "react";
 import { useDeferredValue } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setQuery, setUnits, setWeather } from "../../store/weatherReducer";
+import { setLoading, setQuery, setUnits, setWeather } from "../../store/weatherReducer";
 import getFormattedWeatherData from "../../services/weatherService";
 
 function HeaderItems() {
@@ -20,24 +20,30 @@ function HeaderItems() {
   async function handleSearchClick() {
     try {
       if (searchDefVal !== "") {
+        await dispatch(setLoading(true));
         const queryObj = { q: searchDefVal };
         const weatherResponse = await getFormattedWeatherData({
           ...queryObj,
           units,
         });
 
+        dispatch(setQuery(queryObj));
+
         if (weatherResponse) {
-          dispatch(setQuery(queryObj));
           dispatch(setWeather(weatherResponse));
+          dispatch(setLoading(false));
         }
       }
     } catch (error) {
+      dispatch(setLoading(false));
       console.error(error);
     }
   }
 
   async function handleLocationClick() {
     try {
+      await dispatch(setLoading(true));
+
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
           let lat = position.coords.latitude;
@@ -54,7 +60,10 @@ function HeaderItems() {
       if (weatherResponse) {
         dispatch(setWeather(weatherResponse));
       }
+
+      dispatch(setLoading(false));
     } catch (error) {
+      await dispatch(setLoading(false));
       console.error(error);
     }
   }
@@ -64,7 +73,9 @@ function HeaderItems() {
       const buttonName = event.currentTarget.name;
 
       if (buttonName !== units) {
+        await dispatch(setLoading(true));
         dispatch(setUnits(buttonName));
+
         const weatherResponse = await getFormattedWeatherData({
           ...query,
           units,
@@ -73,8 +84,11 @@ function HeaderItems() {
         if (weatherResponse) {
           dispatch(setWeather(weatherResponse));
         }
+
+        dispatch(setLoading(false));
       }
     } catch (error) {
+      dispatch(setLoading(false));
       console.error(error);
     }
   }
