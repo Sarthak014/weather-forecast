@@ -6,23 +6,26 @@ export const weatherSlice = createSlice({
     initialState: state,
     reducers: {
         setQuery: (state, action) => {
-            console.log('setQuery: ', action);
             state.query = action.payload;
         },
         setUnits: (state, action) => {
             state.units = action.payload;
         },
         setWeather: (state, action) => {
-            console.log('setWeather: ', action);
             state.weather = action.payload;
         },
+        setError: (state, action) => {
+            console.log(action);
+            state.error = action.payload;
+        }
     }
 });
 
 export const {
     setQuery,
     setUnits,
-    setWeather
+    setWeather,
+    setError
   } = weatherSlice.actions;
   
   export default weatherSlice.reducer;

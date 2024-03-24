@@ -1,5 +1,6 @@
 export const state = {
-  query: { q: "Ghaziabad" },
+  query: { q: "Goa" },
   units: "metric",
   weather: null,
+  error: null
 };
