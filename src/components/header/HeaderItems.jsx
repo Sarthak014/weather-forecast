@@ -14,7 +14,16 @@ function HeaderItems() {
   const { query, units } = useSelector((state) => state);
 
   function handleInputChange(event) {
-    setSearch(event.currentTarget.value);
+    setSearch(event.target.value);
+  }
+
+  async function handleInputKeyCapture(event) {
+    const { key, keyCode } = event;
+    const isEnterKeyPressed = key==='Enter' || keyCode===13;
+
+    if (isEnterKeyPressed && searchDefVal !== "") {
+      await handleSearchClick();
+    }
   }
 
   async function handleSearchClick() {
@@ -104,6 +113,7 @@ function HeaderItems() {
           name="search"
           className="text-sm font-light md:p-2 p-1 shadow-sm focus:outline-none capitalize placeholder:lowercase md:w-auto w-3/4"
           onChange={handleInputChange}
+          onKeyUpCapture={handleInputKeyCapture}
         />
         <UilSearch
           size={25}
