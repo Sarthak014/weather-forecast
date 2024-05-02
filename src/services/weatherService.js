@@ -11,9 +11,24 @@ export const getWeatherData = (ver, infoType, searchParams) => {
         if (resp.ok) {
           return resp.json();
         } else {
-          // If the response status is not within 200-299, throw an error
-          toast.error(`${resp.status} - ${resp.statusText}`);
-          throw new Error(`${resp.status} - ${resp.statusText}`);
+          switch (resp.status) {
+            case 400:
+              toast.error('Invalid request.');
+              break;
+            case 401:
+              toast.error('You are not authorized.');
+              break;
+            case 404:
+              toast.error('Place not found.');
+              break;
+            case 429:
+              toast.error('Please try after sometime.');
+              break;
+            default:
+              toast.error('Something went wrong.');
+          }
+
+          throw new Error(`${resp.status}: Something went wrong. Please try after sometime.`);
         }
       });
 };
