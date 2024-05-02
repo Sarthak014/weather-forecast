@@ -40,12 +40,12 @@ function HeaderItems() {
 
         if (weatherResponse) {
           dispatch(setWeather(weatherResponse));
-          dispatch(setLoading(false));
         }
       }
     } catch (error) {
-      dispatch(setLoading(false));
       console.error(error);
+    } finally {
+      dispatch(setLoading(false));
     }
   }
 
@@ -69,11 +69,10 @@ function HeaderItems() {
       if (weatherResponse) {
         dispatch(setWeather(weatherResponse));
       }
-
-      dispatch(setLoading(false));
     } catch (error) {
-      await dispatch(setLoading(false));
       console.error(error);
+    } finally {
+      dispatch(setLoading(false));
     }
   }
 
@@ -93,12 +92,11 @@ function HeaderItems() {
         if (weatherResponse) {
           dispatch(setWeather(weatherResponse));
         }
-
-        dispatch(setLoading(false));
       }
     } catch (error) {
-      dispatch(setLoading(false));
       console.error(error);
+    } finally {
+      dispatch(setLoading(false));
     }
   }
 
