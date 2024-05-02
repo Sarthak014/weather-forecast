@@ -78,15 +78,15 @@ function HeaderItems() {
 
   async function handleClick(event) {
     try {
-      const buttonName = event.currentTarget.name;
+      const buttonName = event.target.name;
 
       if (buttonName !== units) {
-        await dispatch(setLoading(true));
+        dispatch(setLoading(true));
         dispatch(setUnits(buttonName));
 
         const weatherResponse = await getFormattedWeatherData({
           ...query,
-          units,
+          units: buttonName,
         });
 
         if (weatherResponse) {
@@ -126,9 +126,10 @@ function HeaderItems() {
       </div>
 
       <ButtonGroup
-        classes={`md:text-xl text-sm text-white font-light transition ease-out hover:scale-110`}
+        classes={`md:text-xl text-sm font-light transition ease-out hover:scale-110`}
         data={tempBtnSchema}
         isDivider={true}
+        selected={units}
         handleClick={handleClick}
       />
     </div>
